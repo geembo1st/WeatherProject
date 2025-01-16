@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table(name = "Locations")
 @Entity
@@ -23,13 +25,12 @@ public class Location {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "latitude", nullable = false)
-    private BigDecimal latitude;
+    @Column(nullable = false, precision = 9, scale = 6)
+    private Double latitude;
 
-    @Column(name = "longitude", nullable = false)
-    private BigDecimal longitude;
+    @Column(nullable = false, precision = 9, scale = 6)
+    private Double longitude;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToMany(mappedBy = "locations")
+    private Set<User> users = new HashSet<>();
 }
