@@ -26,10 +26,10 @@ public class Location {
     private String name;
 
     @Column(nullable = false, precision = 9, scale = 6)
-    private Double latitude;
+    private BigDecimal latitude;
 
     @Column(nullable = false, precision = 9, scale = 6)
-    private Double longitude;
+    private BigDecimal longitude;
 
     @ManyToMany(mappedBy = "locations")
     private Set<User> users = new HashSet<>();

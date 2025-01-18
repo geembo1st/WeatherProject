@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -21,4 +22,6 @@ public class UserDTO {
     private String password;
 
     private Set<Long> locationIds;
+
+    private Set<UUID> sessionsIds;
 }

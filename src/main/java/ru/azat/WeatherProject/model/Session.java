@@ -22,7 +22,7 @@ public class Session {
     @Column(columnDefinition = "UUID")
     private UUID id;
 
-    @Column(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne
     private User user;
 
