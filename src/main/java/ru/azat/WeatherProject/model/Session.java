@@ -26,6 +26,6 @@ public class Session {
     @ManyToOne
     private User user;
 
-    @JoinColumn(name = "expires_at")
+    @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 }

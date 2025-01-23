@@ -13,7 +13,7 @@ public class SessionDTO {
 
     private String id;
 
-    @NotNull(message = "UserId must not be null")
+    @NotNull(message = "User Id must not be null")
     private Long userId;
 
     @NotNull(message = "Expiration time must not be null")
