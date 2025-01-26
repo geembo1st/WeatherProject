@@ -2,6 +2,7 @@ package ru.azat.WeatherProject.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import ru.azat.WeatherProject.model.User;
@@ -40,5 +41,16 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User showUserById(Long id) {
         return entityManager.find(User.class, id);
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        try {
+            return entityManager.createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
+                    .setParameter("login", login)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

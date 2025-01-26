@@ -12,4 +12,7 @@ public interface UserService {
     void deleteUser(Long id);
     UserDTO updateUser(Long id, UserDTO userDTO);
     UserDTO showUserById(Long id);
+    UserDTO getUserByLogin(String login);
+    UserDTO addLocationToUser(Long userId, Long locationId);
+     UserDTO removeLocationFromUser(Long userId, Long locationId);
 }

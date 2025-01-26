@@ -10,4 +10,5 @@ public interface UserRepository {
     void deleteUser(Long id);
     User updateUser(Long id, User user);
     User showUserById(Long id);
+    User findByLogin(String login);
 }
