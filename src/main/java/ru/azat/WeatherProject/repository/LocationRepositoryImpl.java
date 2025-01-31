@@ -15,12 +15,18 @@ public class LocationRepositoryImpl implements LocationRepository {
 
     @Override
     public List<Location> getAllLocations() {
-        return entityManager.createQuery("From Location").getResultList();
+        return entityManager.createQuery("SELECT l FROM Location l LEFT JOIN FETCH l.users", Location.class).getResultList();
     }
 
     @Override
     public void addLocation(Location location) {
-        entityManager.persist(location);
+        if (location.getId() == null) {
+            entityManager.persist(location);
+            System.out.println("Persisting new location: " + location);
+        } else {
+            entityManager.merge(location);
+            System.out.println("Merging updated location: " + location);
+        }
     }
 
     @Override
@@ -41,5 +47,13 @@ public class LocationRepositoryImpl implements LocationRepository {
     @Override
     public Location showLocationById(Long id) {
         return entityManager.find(Location.class, id);
+    }
+
+    @Override
+    public List<Location> findByUserId(Long userId) {
+        String query = "SELECT l FROM Location l JOIN l.users u WHERE u.id = :userId";
+        return entityManager.createQuery(query, Location.class)
+                .setParameter("userId", userId)
+                .getResultList();
     }
 }

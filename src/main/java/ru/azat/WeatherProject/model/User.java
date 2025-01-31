@@ -3,14 +3,13 @@ package ru.azat.WeatherProject.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "Users")
 @Data
-@ToString(exclude = "password")
+@ToString(exclude = {"password", "sessions", "locations"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,5 +34,5 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "location_id")
     )
-    private Set<Location> locations = new HashSet<>();
+    private List<Location> locations = new ArrayList<>();
 }

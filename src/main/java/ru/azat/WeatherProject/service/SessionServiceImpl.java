@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.azat.WeatherProject.dto.SessionDTO;
 import ru.azat.WeatherProject.model.Session;
 import ru.azat.WeatherProject.repository.SessionRepository;
@@ -46,6 +47,7 @@ public class SessionServiceImpl implements SessionService {
         return session;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<SessionDTO> getAllSessions() {
         log.info("Получение всех сессий");
@@ -56,6 +58,7 @@ public class SessionServiceImpl implements SessionService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void addSession(SessionDTO sessionDTO) {
         log.info("Добавление сессии с id:{}", sessionDTO.getId());
@@ -73,6 +76,7 @@ public class SessionServiceImpl implements SessionService {
         log.info("Сессия с id:{} добавлена", sessionDTO.getId());
     }
 
+    @Transactional
     @Override
     public void deleteSession(UUID id) {
         log.info("Удаление сессии с id:{}", id);
@@ -80,6 +84,7 @@ public class SessionServiceImpl implements SessionService {
         log.info("Сессия с id:{} удалена", id);
     }
 
+    @Transactional
     @Override
     public SessionDTO updateSessions(UUID id, SessionDTO sessionDTO) {
         log.info("Обновление сессии с id:{}", id);
@@ -95,6 +100,7 @@ public class SessionServiceImpl implements SessionService {
         return convertToSessionDTO(session);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public SessionDTO showSessionById(UUID id) {
         log.info("Поиск Сессии с id:{}", id);

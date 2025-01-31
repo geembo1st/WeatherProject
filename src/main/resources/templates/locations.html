@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locations</title>
+</head>
+<body>
+<h1>Locations List</h1>
+<ul>
+    <li th:each="location : ${locations}">
+        <p>
+            <span th:text="${location.name}">Location Name</span>
+            <span th:text="${location.latitude}">Latitude</span>
+            <span th:text="${location.longitude}">Longitude</span>
+
+        <form th:action="@{/locations/{id}/add(id=${location.id})}" method="post">
+            <button type="submit">Add to my locations</button>
+        </form>
+        </p>
+    </li>
+</ul>
+<a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>

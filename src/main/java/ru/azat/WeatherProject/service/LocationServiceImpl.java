@@ -4,14 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.azat.WeatherProject.dto.LocationDTO;
 import ru.azat.WeatherProject.model.Location;
+import ru.azat.WeatherProject.model.User;
 import ru.azat.WeatherProject.repository.LocationRepository;
 import ru.azat.WeatherProject.repository.UserRepository;
 import ru.azat.WeatherProject.util.LocationNotFoundException;
+import ru.azat.WeatherProject.util.UserNotFoundException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +33,7 @@ public class LocationServiceImpl implements LocationService {
         log.debug("LocationServiceImpl создан");
     }
 
+    @Transactional
     public LocationDTO convertToLocationDTO(Location location) {
         log.debug("Конвертация Location в DTO: {}", location.getId());
         LocationDTO locationDTO = modelMapper.map(location, LocationDTO.class);
@@ -39,6 +44,7 @@ public class LocationServiceImpl implements LocationService {
         return locationDTO;
     }
 
+    @Transactional
     public Location convertToLocation(LocationDTO locationDTO) {
         log.debug("Конвертации из DTO в Location: {}", locationDTO.getId());
         Location location = modelMapper.map(locationDTO, Location.class);
@@ -51,8 +57,8 @@ public class LocationServiceImpl implements LocationService {
         return location;
     }
 
-
     @Override
+    @Transactional(readOnly = true)
     public List<LocationDTO> getAllLocations() {
         log.info("Получение всех локаций");
         List<Location> locations = locationRepository.getAllLocations();
@@ -62,6 +68,7 @@ public class LocationServiceImpl implements LocationService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void addLocation(LocationDTO locationDTO) {
         log.info("Добавление новой локации");
@@ -70,6 +77,7 @@ public class LocationServiceImpl implements LocationService {
         log.info("Локация с id: {} добавлена", location.getId());
     }
 
+    @Transactional
     @Override
     public void deleteLocation(Long id) {
         log.info("Удаление новой локации");
@@ -77,6 +85,7 @@ public class LocationServiceImpl implements LocationService {
         log.info("Локация с id: {} удалена", id);
     }
 
+    @Transactional
     @Override
     public LocationDTO updateLocation(Long id, LocationDTO locationDTO) {
         log.info("Обновление новой локации");
@@ -95,6 +104,7 @@ public class LocationServiceImpl implements LocationService {
         return convertToLocationDTO(location);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public LocationDTO showLocationById(Long id) {
         log.info("Поиск локации");
@@ -104,5 +114,33 @@ public class LocationServiceImpl implements LocationService {
         }
         log.info("Локация с id:{} найдена", id);
         return convertToLocationDTO(location);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<LocationDTO> getLocationsByUserId(Long userId) {
+        List<Location> locations = locationRepository.findByUserId(userId);
+        return locations.stream()
+                .map(location -> modelMapper.map(location, LocationDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public void deleteLocationForUser(Long locationId, Long userId) {
+        Location location = locationRepository.showLocationById(locationId);
+        if (location == null) {
+            throw new LocationNotFoundException("Location not found");
+        }
+
+        User user = userRepository.showUserById(userId);
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getLocations().remove(location);
+        location.getUsers().remove(user);
+        userRepository.addUser(user);
+        locationRepository.addLocation(location);
     }
 }

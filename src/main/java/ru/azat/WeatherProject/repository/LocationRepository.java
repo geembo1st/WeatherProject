@@ -10,4 +10,5 @@ public interface LocationRepository {
     void deleteLocation(Long id);
     Location updateLocation(Long id, Location location);
     Location showLocationById(Long id);
+    List<Location> findByUserId(Long userId);
 }

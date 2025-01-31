@@ -2,6 +2,7 @@ package ru.azat.WeatherProject.service;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import ru.azat.WeatherProject.repository.UserRepository;
 import ru.azat.WeatherProject.util.LocationNotFoundException;
 import ru.azat.WeatherProject.util.PasswordUtils;
 import ru.azat.WeatherProject.util.PersonNotFoundException;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,9 +49,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
         user.setSessions(sessions);
 
-        Set<Location> locations = userDTO.getLocationIds().stream()
+        List<Location> locations = userDTO.getLocationIds().stream()
                 .map(locationId -> locationRepository.showLocationById(locationId))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         user.setLocations(locations);
         return user;
     }
@@ -118,9 +120,9 @@ public class UserServiceImpl implements UserService {
         }
 
         if (userDTO.getLocationIds() != null) {
-            Set<Location> locations = userDTO.getLocationIds().stream()
+            List<Location> locations = userDTO.getLocationIds().stream()
                     .map(locationRepository::showLocationById)
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             existingUser.setLocations(locations);
         }
 
@@ -179,7 +181,6 @@ public class UserServiceImpl implements UserService {
         }
 
         existingUser.getLocations().add(location);
-
         userRepository.updateUser(userId, existingUser);
         log.info("Локация с id:{} добавлена пользователю с id:{}", locationId, userId);
 
@@ -210,6 +211,5 @@ public class UserServiceImpl implements UserService {
 
         return convertToUserDTO(existingUser);
     }
-
 
 }

@@ -8,9 +8,34 @@
 </head>
 <body>
 <div class="container">
-    <h2>Добро пожаловать, <span th:text="${username}"></span>!</h2>
+    <h2>Добро пожаловать, <span th:text="${user.getLogin()}"></span>!</h2>
 
     <p>Вы авторизованы в системе.</p>
+    <h2>Список городов, который вы добавили:</h2>
+    <ul>
+        <li th:each="location, iterStat : ${locations}">
+            <p>
+                <span th:text="${location.name}">Location Name</span>
+
+            <p th:text="'Weather: ' + ${weatherData[iterStat.index].temperature} + '°C'">Weather: </p>
+
+            <form th:action="@{/dashboard/location/updateWeather}" method="post">
+                <input type="hidden" name="locationId" th:value="${location.id}" />
+                <input type="hidden" name="_method" value="PATCH"/>
+                <button type="submit">Обновить погоду</button>
+            </form>
+
+            <form th:action="@{/dashboard/location/delete}" method="post">
+                <input type="hidden" name="locationId" th:value="${location.id}" />
+                <input type="hidden" name="_method" value="DELETE"/>
+                <button type="submit">Удалить город</button>
+            </form>
+            <p>
+        </li>
+    </ul>
+
+
+    <a href="/locations">Добавить новый город</a>
 
     <form action="/auth/logout" method="post">
         <button type="submit">Выйти</button>

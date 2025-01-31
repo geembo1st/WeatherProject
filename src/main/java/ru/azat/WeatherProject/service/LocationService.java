@@ -10,4 +10,6 @@ public interface LocationService {
     void deleteLocation(Long id);
     LocationDTO updateLocation(Long id, LocationDTO locationDTO);
     LocationDTO showLocationById(Long id);
+    List<LocationDTO> getLocationsByUserId(Long userId);
+    void deleteLocationForUser(Long locationId, Long userId);
 }

@@ -2,39 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>People</title>
 </head>
 <body>
-<h1>People</h1>
-
-<div th:if="${user != null}">
-    <h2>User Details</h2>
-    <table border="1">
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Age</th>
-        </tr>
-        <tr>
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.login}"></td>
-        </tr>
-    </table>
-</div>
-
-<div th:if="${people != null}">
-    <h2>All People</h2>
-    <table border="1">
-        <tr>
-            <th>Id</th>
-            <th>Login</th>
-        </tr>
-        <tr th:each="user : ${people}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.login}"></td>
-        </tr>
-    </table>
-</div>
+<h1>Users</h1>
+<ul>
+    <li th:each="user : ${people}">
+        <p>
+            <span th:text="${user.login}">User Login</span>
+            <a th:href="@{/dashboard/{id}(id=${user.id})}">View Dashboard</a>
+        </p>
+    </li>
+</ul>
 </body>
 </html>
+

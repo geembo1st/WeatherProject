@@ -57,12 +57,35 @@ public class AuthService {
         return session.getId();
     }
 
+    @Transactional
     public boolean isSessionValid(UUID sessionId) {
         Session session = sessionRepository.showSessionById(sessionId);
-        return session!=null && session.getExpiresAt().isAfter(LocalDateTime.now());
+        if (session == null) {
+            log.warn("Сессия {} не найдена", sessionId);
+            return false;
+        }
+        if (session.getExpiresAt().isBefore(LocalDateTime.now())) {
+            log.warn("Сессия {} истекла", sessionId);
+            return false;
+        }
+
+        log.info("Сессия {} валидна", sessionId);
+        return true;
     }
 
+    @Transactional
     public void logoutUser(UUID sessionId) {
         sessionRepository.deleteSession(sessionId);
+    }
+
+    @Transactional(readOnly = true)
+    public User getUserBySession(UUID sessionId) {
+        Session session = sessionRepository.showSessionById(sessionId);
+        if (session == null) {
+            log.warn("Не найдена сессия с ID {}", sessionId);
+            return null;
+        }
+        log.info("Найден пользователь {} по сессии {}", session.getUser().getLogin(), sessionId);
+        return session.getUser();
     }
 }

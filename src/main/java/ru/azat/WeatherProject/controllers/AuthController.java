@@ -3,6 +3,7 @@ package ru.azat.WeatherProject.controllers;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import ru.azat.WeatherProject.service.UserService;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
@@ -60,7 +62,11 @@ public class AuthController {
             Cookie sessionCookie = new Cookie("SESSIONID", sessionId.toString());
             sessionCookie.setHttpOnly(true);
             sessionCookie.setMaxAge(7200);
+            sessionCookie.setPath("/");
             response.addCookie(sessionCookie);
+
+            log.info("Куки SESSIONID установлен: {}", sessionId);
+
             return "redirect:/dashboard";
         } catch (RuntimeException e) {
         model.addAttribute("errorMessage", e.getMessage());
